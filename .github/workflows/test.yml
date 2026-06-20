@@ -1,0 +1,42 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      tests:
+        description: Number of tests to generate
+        required: false
+        default: "25"
+      files:
+        description: Number of test files to generate
+        required: false
+        default: "5"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: generated-vitest-project/package-lock.json
+
+      - name: Install dependencies
+        working-directory: generated-vitest-project
+        run: npm ci
+
+      - name: Generate tests
+        working-directory: generated-vitest-project
+        run: npm run generate:tests -- --tests "${{ inputs.tests || '25' }}" --files "${{ inputs.files || '5' }}"
+
+      - name: Run tests
+        working-directory: generated-vitest-project
+        run: npm test
