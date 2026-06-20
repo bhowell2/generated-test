@@ -23,11 +23,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 26
           cache: npm
-          cache-dependency-path: generated-vitest-project/package-lock.json
 
       - name: Install dependencies
         working-directory: generated-vitest-project
